@@ -26,12 +26,19 @@ module.exports = function(real_user_interface, test_user_interface){
             //await testUser.cleanUp() //html-e2e does not support closing twice
         })
 
-        const testCases = ["test1", "test2", "test3"];
+        const testCases = ["test1", "test2"];
         testCases.forEach(testName => {
             it(`add a test and export to JSON for ${testName}`, async () => {
                 await realUser.addTest({ name: testName });
                 await testUser.AssertTestIsDefined(testName);
             });
+        });
+        it('add multiple tests and export to JSON', async () => {
+            const multipleTests = ["test4", "test5", "test6"];
+            for (const testName of multipleTests) {
+            await realUser.addTest({ name: testName });
+            await testUser.AssertTestIsDefined(testName);
+            }
         });
 
         
