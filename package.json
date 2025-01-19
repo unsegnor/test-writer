@@ -1,0 +1,36 @@
+{
+  "name": "test-writer",
+  "version": "1.0.0",
+  "description": "test writer agnostic from the interface, focused on the user, powerful as a programming language",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test-html",
+    "test-html": "mocha solution/html-ui --recursive --timeout 30000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unsegnor/test-writer.git"
+  },
+  "keywords": [
+    "tests",
+    "writer",
+    "tdd",
+    "bdd"
+  ],
+  "author": "Víctor Calatayud",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/unsegnor/test-writer/issues"
+  },
+  "homepage": "https://github.com/unsegnor/test-writer#readme",
+  "devDependencies": {
+    "chai": "4.0.0",
+    "express": "^4.21.0",
+    "get-port": "^5.1.1",
+    "html-e2e": "^2.0.14",
+    "mocha": "10.8.2"
+  },
+  "dependencies": {
+    "uuid": "^11.0.5"
+  }
+}

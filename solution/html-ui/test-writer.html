@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Tests</title>
+  <script>
+    const tests = [];
+
+    function addStep() {
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+      if (name) {
+        tests.push({ name, description, subSteps: [] });
+        renderSteps();
+      }
+      save();
+    }
+
+    function renderSteps() {
+      const stepsContainer = document.getElementById('stepsContainer');
+      stepsContainer.innerHTML = tests
+        .map((step, index) => `<li>${step.name} - ${step.description}</li>`)
+        .join('');
+    }
+
+    function exportToJSON() {
+      const jsonOutput = JSON.stringify(tests, null, 2);
+      const blob = new Blob([jsonOutput], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tests.json';
+      a.click();
+    }
+
+    function save() {
+      let stringifiedTests = JSON.stringify(tests);
+      localStorage.setItem('tests', stringifiedTests);
+      console.log('Tests saved to localStorage.');
+      
+      document.getElementById('jsonOutput').value = stringifiedTests;
+    }
+
+  function load() {
+      const savedTests = localStorage.getItem('tests');
+      if (savedTests) {
+        document.getElementById('jsonOutput').value = savedTests;
+        const loadedTests = JSON.parse(savedTests);
+        tests.length = 0;
+        tests.push(...loadedTests);
+        renderSteps();
+        console.log('Tests loaded from localStorage.');
+      } else {
+        console.log('No tests found in localStorage.');
+      }
+    }
+
+    function loadFromJSON() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = event => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = e => {
+          const content = e.target.result;
+          const loadedTests = JSON.parse(content);
+          tests.length = 0;
+          tests.push(...loadedTests);
+          renderSteps();
+        };
+        reader.readAsText(file);
+      };
+      input.click()
+    }
+
+    window.addEventListener('storage', event => {
+      if (event.key === 'tests') {
+        load();
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>Generador de Tests</h1>
+  <label for="name">name:</label>
+  <input type="text" id="name" />
+  <label for="description">Descripción:</label>
+  <textarea id="description"></textarea>
+  <button onclick="addStep()">Add test</button>
+  <ul id="stepsContainer"></ul>
+  <button onclick="exportToJSON()">Exportar a JSON</button>
+  <button onclick="loadFromJSON()">load export</button>
+  <button onclick="save()">save</button>
+  <button onclick="load()">load</button>
+  <label for="jsonOutput">JSON:</label>
+  <textarea id="jsonOutput"></textarea>
+</body>
+</html>
